@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบตรวจสอบอาการเบื้องต้น</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!--CSS decoration-->
+    <style>
+        /* --- CSS (ความสวยงาม) --- */
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* --- สไตล์ของ "หน้าปก" --- */
+        #cover-page {
+            text-align: center;
+        }
+        h1 {
+            color: #005f9e; /* สีมหิดล */
+            text-align: center;
+        }
+        .warning-box {
+            background-color: #fffbeb;
+            border: 2px solid #fde047; /* สีเหลือง */
+            color: #b45309; /* สีส้มเข้ม */
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            line-height: 1.7;
+            font-size: 16px;
+            margin-top: 25px;
+        }
+        .warning-box h2 {
+            margin-top: 0;
+            color: #d97706; /* สีส้ม */
+            text-align: center;
+        }
+        .start-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 30px;
+            background-color: #005f9e; /* สีน้ำเงินมหิดล */
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .start-button:hover {
+            background-color: #004a7c;
+        }
+
+        /* --- สไตล์ของ "หน้าประเมิน" (เหมือนเดิม) --- */
+        h2 {
+            border-bottom: 2px solid #005f9e;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .symptom-item label {
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .symptom-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .symptom-item label:hover {
+            background-color: #eef;
+        }
+        .analyze-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s;
+        }
+        .analyze-button:hover {
+            background-color: #218838;
+        }
+        .result-card {
+            background-color: #fdfdfd;
+            border: 1px solid #ddd;
+            border-left: 5px solid #005f9e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .result-card h3 {
+            margin-top: 0;
+            color: #005f9e;
+        }
+        .result-card .score {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #d9534f;
+        }
+        .result-advice {
+            font-style: italic;
+            color: #555;
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #no-result {
+            text-align: center;
+            font-size: 1.1em;
+            color: #777;
+        }
+        .reset-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #555;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .danger-box {
+            background-color: #fee2e2; 
+            border: 1px solid #ef4444; 
+            color: #991b1b; 
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            display: flex; 
+            align-items: flex-start;
+        }
+        .danger-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            line-height: 1;
+        }
+        /* --- สไตล์สำหรับกล่องความรู้หน้าแรก (เพิ่มใหม่) --- */
+        .knowledge-container {
+         display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* จัดเรียงอัตโนมัติ */
+            gap: 20px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .info-card {
+            padding: 20px;
+            border-radius: 10px;
+         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .info-card h3 {
+         margin-top: 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-card h3 span {
+         font-size: 1.4em;
+            margin-right: 10px;
+        }
+
+        .info-card ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 0.9em;
+        }
+
+        .info-card li {
+            margin-bottom: 8px;
+        }
+
+        /* สีเฉพาะสำหรับแต่ละกล่อง */
+        .card-danger {
+         background-color: #fff5f5;
+         border: 1px solid #feb2b2;
+         color: #c53030;
+        }
+
+        .card-meds {
+            background-color: #ebf8ff;
+            border: 1px solid #90cdf4;
+            color: #2b6cb0;
+        }
+
+        .card-emergency {
+            background-color: #fffaf0;
+            border: 1px solid #fbd38d;
+            color: #c05621;
+        }
+        /* สไตล์ปุ่มคลังความรู้ (สีฟ้า) */
+        .knowledge-button {
+            display: inline-block;
+            margin-top: 15px; /* เว้นระยะจากปุ่มเริ่ม */
+            margin-left: 10px; /* เว้นระยะด้านข้าง (ถ้าว่างบรรทัดเดียวกัน) */
+            padding: 12px 25px;
+            background-color: #17a2b8; /* สีฟ้าน้ำทะเล */
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .knowledge-button:hover {
+            background-color: #138496;
+        }
+
+        /* จัดหน้าคลังความรู้เป็น Grid สวยๆ */
+        .encyclopedia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* ปรับขนาดอัตโนมัติ */
+            gap: 20px;
+        }
+        /* ใช้การ์ดแบบเดียวกับหน้าผลลัพธ์ แต่ปรับความสูงให้เท่ากัน */
+        .encyclopedia-item {
+         background-color: #fff;
+            border: 1px solid #ddd;
+            border-top: 5px solid #17a2b8; /* หัวสีฟ้า */
+            border-radius: 8px;
+            padding: 20px;
+            height: 100%; /* ให้การ์ดสูงเท่ากันหมด */
+            box-sizing: border-box;
+        }
+        .encyclopedia-item h3 {
+            color: #005f9e;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!--Title page is here-->
+    <div class="container">
+
+        <div id="cover-page">
+            <h1>🩺 ระบบตรวจสอบอาการเบื้องต้น</h1>
+            <p style="text-align: center;">โครงงานวิชา MUGE100 มหาวิทยาลัยมหิดล</p>
+
+            <div class="knowledge-container">
+        
+                <div class="info-card card-danger">
+                 <h3><span>🚨</span> สัญญาณอันตราย (พบแพทย์หรือไปโรงพยาบาลทันที)</h3>
+                    <ul>
+                        <li>หมดสติ / ปลุกไม่ตื่น / สับสน</li>
+                        <li>หายใจไม่ออก / หอบเหนื่อยรุนแรง</li>
+                        <li>เจ็บแน่นหน้าอกเหมือนมีอะไรทับ</li>
+                        <li>เลือดออกไม่หยุด / อาเจียนเป็นเลือด</li>
+                        <li>ปากเบี้ยว แขนขาอ่อนแรง พูดไม่ชัด</li>
+                    </ul>
+                </div>
+
+                <div class="info-card card-meds">
+                    <h3><span>💊</span> หลักการทานยาให้ถูกต้อง</h3>
+                    <ul>
+                        <li><strong>อ่านฉลากทุกครั้ง:</strong> ก่อนทานยา</li>
+                        <li><strong>ไม่ทานยาคนอื่น:</strong> แม้อาการจะคล้ายกัน</li>
+                        <li><strong>ยาปฏิชีวนะ (ฆ่าเชื้อ):</strong> ต้องจ่ายโดยแพทย์/เภสัชกร ห้ามซื้อกินเองพร่ำเพรื่อ หากได้รับประทาน ต้องรับประทานให้ครบ ถ้ารับประทานไม่ครบ อาจเกิดเชื้อดื้อยาได้ในอนาคต</li>
+                        <li><strong>แพ้ยา:</strong> ต้องจำชื่อยาที่แพ้และแจ้งแพทย์/เภสัชกร เสมอ</li>
+                    </ul>
+                </div>
+
+                <div class="info-card card-emergency">
+                    <h3><span>🆘</span> สิ่งที่ควรปฏิบัติเมื่อเกิดเหตุฉุกเฉินกับตนเอง</h3>
+                    <ul>
+                        <li><strong>ตั้งสติ:</strong> อย่าเพิ่งขยับตัวหากบาดเจ็บหนัก</li>
+                        <li><strong>โทร 1669:</strong> แจ้งอาการและสถานที่ให้ชัดเจน</li>
+                        <li><strong>ปลดล็อกประตูห้อง:</strong> เพื่อให้กู้ภัยเข้ามาช่วยได้</li>
+                        <li><strong>ติดต่อคนใกล้ชิด:</strong> หรือผู้ดูแลหอพักทันที</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="warning-box">
+                <h2>⚠️ ข้อควรทราบและคำเตือน</h2>
+                <p>
+                 เว็บไซต์นี้สร้างขึ้นเพื่อ <strong>วัตถุประสงค์ทางการศึกษาสำหรับโครงงานวิชา MUGE100 ในมหาวิทยาลัยมหิดลเท่านั้น ห้ามนำไปใช้ในการวินิจฉัยโรคจริงโดยเด็ดขาด</strong> ข้อมูลที่ได้เป็นเพียงการคาดการณ์จากตรรกะเบื้องต้น ไม่สามารถทดแทนการวินิจฉัยจากแพทย์ผู้เชี่ยวชาญได้ หากมีข้อสงสัยหรือกังวลในการรักษา ควรไปพบแพทย์หรือเภสัชกรโดยตรง
+                </p>
+            </div>
+
+            <button class="start-button" onclick="startChecker()">
+                รับทราบและเริ่มต้นทำแบบประเมิน
+            </button>
+            <button class="knowledge-button" onclick="showEncyclopedia()">
+                📖 ดูข้อมูลโรคและการรักษาทั้งหมด
+            </button>
+        </div>
+                <div id="checker-page" style="display: none;">
+            
+                 <h2>กรุณาเลือกอาการที่คุณเป็นทั้งหมด:</h2>
+                    <div id="symptom-list" class="symptom-grid">
+                        </div>
+    
+                    <button id="analyze-button" class="analyze-button">
+                     วิเคราะห์อาการ
+                    </button>
+    
+                    <h2>ผลการคาดการณ์ (เรียงตามความเป็นไปได้)</h2>
+                    <div id="results-container">
+                        <p id="no-result">ยังไม่มีการวิเคราะห์ผล กรุณาเลือกอาการและกดปุ่ม</p>
+                    </div>
+
+                 <hr style="border-top: 1px solid #eee; margin-top: 30px;">
+                    <div style="text-align: center;">
+                        <button class="reset-button" onclick="location.reload()">
+                    กลับไปหน้าแรก (เริ่มใหม่)
+                        </button>
+                    </div>
+                </div>
+                <div id="encyclopedia-page" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1>📖 คลังข้อมูลโรคและการรักษา</h1>
+                        <p>ข้อมูลทั้งหมดที่มีในระบบ เพื่อการศึกษาและการดูแลเบื้องต้น</p>
+        
+                        <button class="reset-button" onclick="goBackToCover()">
+                         ⬅ กลับไปหน้าหลัก
+                        </button>
+                    </div>
+
+                    <div id="encyclopedia-container" class="encyclopedia-grid">
+                        </div>
+                </div>
+        </div>
+
+    <script>
+        
+        // --- Title -> Symptoms checking apps ---
+        function startChecker() {
+            // ซ่อนหน้าปก
+            document.getElementById('cover-page').style.display = 'none';
+            // แสดงหน้าประเมิน
+            document.getElementById('checker-page').style.display = 'block';
+        }
+
+        // --- Symptoms Database ---
+        const ALL_SYMPTOMS = {
+            's_fever_low': 'มีไข้ต่ำๆ',
+            's_fever_high': 'มีไข้สูง (เกิน 38.5°C)',
+            's_headache': 'ปวดศีรษะ',
+            's_muscle_ache': 'ปวดเมื่อยกล้ามเนื้อ (โดยเฉพาะรุนแรง)',
+            's_runny_nose': 'มีน้ำมูก / คัดจมูก',
+            's_sneeze': 'จาม',
+            's_sore_throat': 'เจ็บคอ',
+            's_cough_dry': 'ไอแห้ง',
+            's_cough_phlegm': 'ไอมีเสมหะ',
+            's_stomach_pain': 'ปวดท้อง (บริเวณลิ้นปี่)',
+            's_bloating': 'ท้องอืด / แน่นท้อง',
+            's_nausea': 'คลื่นไส้',
+            's_allergy_itchy': 'คันตา / คันจมูก / ผื่นคัน',
+            's_diarrhea': 'ถ่ายเป็นน้ำมากกว่า 3 ครั้ง ใน 24 ชั่วโมง',
+            's_twist_pain': 'ปวดบิดบริเวณกลางท้อง',
+            's_vomitting': 'อาเจียน',
+            's_dizziness_spin': 'เวียนศีรษะรุนแรง / รู้สึกเหมือนบ้านหมุน',
+            's_balance_loss': 'ทรงตัวไม่อยู่ / เดินเซ',
+            's_ear_ringing': 'หูอื้อ / มีเสียงวิ้งในหู',
+            's_throbbing_pain': 'ปวดศีรษะตุ้บๆ (มักเป็นข้างเดียว)',
+            's_sensitive_light': 'ตาแพ้แสงจ้า / ทนเสียงดังไม่ได้',
+        };
+
+        // --- Diseases and scores  ---
+        const DISEASE_DB = {
+            'cold': {
+                displayName: 'ไข้หวัดธรรมดา (Common Cold)',
+                advice: 'พักผ่อนให้เพียงพอ ดื่มน้ำอุ่น ทานพาราเซตามอลเพื่อลดไข้/ปวดหัว หากมีน้ำมูกให้ทานยาแก้แพ้ (CPM, Loratadine)',
+                urgent: 'ไข้สูงเกิน 3 วัน, หายใจหอบเหนื่อย, เสมหะเปลี่ยนเป็นสีเขียวข้นหรือเหลืองจัด (อาจติดเชื้อแบคทีเรียแทรกซ้อน)',
+                scores: {
+                    's_fever_low': 2,
+                    's_runny_nose': 3,
+                    's_sneeze': 2,
+                    's_sore_throat': 2,
+                    's_headache': 1,
+                }
+            },
+            'flu': {
+                displayName: 'ไข้หวัดใหญ่ (Influenza)',
+                advice: '!! ควรไปพบแพทย์ !! เพื่อตรวจยืนยันและรับยาต้านไวรัส โดยเฉพาะหากเป็นกลุ่มเสี่ยง สามารถดูแลเบื้องต้นได้เช่นกัน ด้วยการเช็ดตัวลดไข้ ทานยาตามอาการ (ไข้หรือไอ) และสังเกตอาการแทรกซ้อน',
+                urgent: 'หายใจลำบาก/หอบเหนื่อย, เจ็บแน่นหน้าอก, ซึมลง/เรียกไม่รู้สึกตัว, ไข้สูงลอยไม่ลดแม้เช็ดตัวหรือกินยา',
+                scores: {
+                    's_fever_high': 3,
+                    's_muscle_ache': 3,
+                    's_headache': 2,
+                    's_cough_dry': 1,
+                    's_sore_throat': 1,
+                }
+            },
+            'gastritis': {
+                displayName: 'โรคกระเพาะอาหารอักเสบ (Gastritis)',
+                advice: 'ทานยาลดกรด (Antacids) หรือ ยาลดการหลั่งกรด (เช่น Omeprazole) ก่อนอาหาร 30 นาที หลีกเลี่ยงอาหารรสจัด, ของมัน, ชา, กาแฟ',
+                urgent: 'อาเจียนเป็นเลือดหรือสีดำคล้ำ, ถ่ายอุจจาระสีดำเหมือนยางมะตอย, น้ำหนักลดโดยไม่ทราบสาเหตุ, ปวดท้องรุนแรงจนเหงื่อแตก',
+                scores: {
+                    's_stomach_pain': 3,
+                    's_bloating': 2,
+                    's_nausea': 1,
+                }
+            },
+            'allergy': {
+                displayName: 'โรคภูมิแพ้ (Allergies)',
+                advice: 'ทานยาแก้แพ้ (Antihistamines) เช่น ลอราทาดีน (Loratadine) หรือ เซทิริซีน (Cetirizine) วันละ 1 ครั้ง พยายามหลีกเลี่ยงสิ่งที่คาดว่าจะแพ้',
+                urgent: 'หายใจไม่ออก/แน่นหน้าอก, บวมที่ใบหน้า/ปาก/ตา, ผื่นขึ้นทั่วตัวอย่างรวดเร็ว (อาจเป็นอาการแพ้รุนแรง Anaphylaxis)',
+                scores: {
+                    's_allergy_itchy': 3,
+                    's_runny_nose': 2,
+                    's_sneeze': 2,
+                }
+            },
+            'food_poisoning': {
+                displayName: 'อาหารเป็นพิษ (Food Poisoning)',
+                advice: '1.ดื่มน้ำผสมผงเกลือแร่ (ORS) ทีละน้อยแต่บ่อยครั้ง เพื่อชดเชยน้ำที่เสียไป 2.ทานอาหารอ่อน เช่น ข้าวต้ม 3. "ไม่แนะนำ" ให้ทานยาหยุดถ่ายทันที เพราะร่างกายต้องการขับเชื้อ/สารพิษออก',
+                urgent: 'ถ่ายเป็นมูกเลือด, ไข้สูง, อ่อนเพลียมากจนลุกไม่ไหว, ปัสสาวะไม่ออกหรือออกน้อยมาก (ขาดน้ำรุนแรง)',
+                scores: {
+                    's_stomach_pain': 2,
+                    's_nausea': 3,
+                    's_diarrhea': 3,
+                    's_twist_pain': 2,
+                    's_vomitting': 2,   
+                    's_fever_low': 1
+                }
+            },
+            'upper_respiratory_tract':{
+                displayName:'ติดเชื้อทางเดินหายใจส่วนบน (Upper respiratory tract infection)',
+                advice: 'โรคนี้ส่วนใหญ่เกิดจากเชื้อไวรัส มักหายได้เองใน 7-10 วัน การดูแลเบื้องต้น: 1.พักผ่อนให้เพียงพอและดื่มน้ำสะอาดมากๆ เพื่อช่วยละลายเสมหะ 2.ทานยาพาราเซตามอลเมื่อมีไข้หรือปวดศีรษะ 3.หากเจ็บคอให้กลั้วคอด้วยน้ำเกลือ 4.หลีกเลี่ยงน้ำเย็นและของทอด',
+                urgent: 'เจ็บคอมากจนกลืนน้ำลายไม่ได้, หายใจมีเสียงหวีด, ไข้สูงติดต่อกันเกิน 3 วัน',
+                scores: {
+                    's_fever_low': 2,
+                    's_runny_nose': 2,
+                    's_sore_throat': 3,
+                    's_cough_dry': 2,
+                    's_cough_phlegm': 2,
+                    's_headache': 1,
+                    's_sneeze': 1
+                }
+            },
+            'vertigo': {
+                displayName: 'โรคเวียนศีรษะ / บ้านหมุน (Vertigo)',
+                advice: '1. หยุดทำกิจกรรมทุกอย่างและนั่งพักหรือนอนราบทันที 2. หลีกเลี่ยงการขยับศีรษะเร็วๆ 3. พยายามมองจุดใดจุดหนึ่งนิ่งๆ ห้ามหลับตาเดิน 4. งดการขับรถหรือทำงานกับเครื่องจักร 5. ทานยาแก้เวียนศีรษะ (Dimenhydrinate) ได้ แต่จะทำให้ง่วงซึม',
+                urgent: 'มีอาการแขนขาอ่อนแรง, ปากเบี้ยว, พูดไม่ชัด, มองเห็นภาพซ้อน (อาจเป็นสัญญาณของโรคหลอดเลือดสมอง/Stroke), หูดับเฉียบพลัน, ปวดศีรษะรุนแรงที่ไม่เคยเป็นมาก่อน, หรือหมดสติ',
+                scores: {
+                    's_dizziness_spin': 3, 
+                    's_balance_loss': 3,   
+                    's_nausea': 2,         
+                    's_ear_ringing': 1, 
+                    's_headache': 1
+                }
+            },
+            'migraine': {
+                displayName: 'โรคไมเกรน (Migraine)',
+                advice: '1. รีบทานยาแก้ปวด (เช่น พาราเซตามอล หรือ ไอบูโพรเฟน) "ทันที" ที่เริ่มมีอาการ อย่ารอให้ปวดมาก 2. นอนพักในห้องที่ มืด เงียบ และเย็น 3. ประคบเย็นบริเวณหน้าผากหรือท้ายทอย 4. หลีกเลี่ยงปัจจัยกระตุ้น เช่น กาแฟ, ชีส, แสงจ้า หรือการอดนอน',
+                urgent: 'อาการปวดเปลี่ยนแปลงไปจากเดิม (เช่น ปวดรุนแรงที่สุดในชีวิต), มีไข้สูงร่วมกับคอแข็ง (ก้มคอไม่ได้), เห็นภาพซ้อนหรือตาบอดชั่วขณะ, หรือมีอาการแขนขาอ่อนแรงร่วมด้วย (ต้องแยกโรคจากหลอดเลือดสมอง)',
+                scores: {
+                    's_throbbing_pain': 3,  
+                    's_sensitive_light': 3,  
+                    's_headache': 2,         
+                    's_nausea': 2,          
+                    's_eye_pain': 2          
+                 }
+            },
+        }
+        
+        // --- 3. ส่วนการทำงานของ JavaScript  ---
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 3.1 สร้าง Checkbox อัตโนมัติ
+            const symptomListContainer = document.getElementById('symptom-list');
+            for (const symptomId in ALL_SYMPTOMS) {
+                const labelText = ALL_SYMPTOMS[symptomId];
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'symptom-item';
+                
+                itemDiv.innerHTML = `
+                    <label>
+                        <input type="checkbox" name="symptoms" value="${symptomId}">
+                        ${labelText}
+                    </label>
+                `;
+                symptomListContainer.appendChild(itemDiv);
+            }
+
+            // 3.2 สั่งให้ปุ่ม "วิเคราะห์" รอคลิก
+            const analyzeButton = document.getElementById('analyze-button');
+            analyzeButton.addEventListener('click', analyzeSymptoms);
+        });
+
+            // --- Symptoms analysis ---
+            function analyzeSymptoms() {
+                const checkedBoxes = document.querySelectorAll('input[name="symptoms"]:checked');
+                const selectedSymptoms = [];
+                checkedBoxes.forEach(function(checkbox) {
+                    selectedSymptoms.push(checkbox.value);
+                });
+
+                let calculatedScores = [];
+
+                for (const diseaseId in DISEASE_DB) {
+                    const disease = DISEASE_DB[diseaseId];
+                    let currentScore = 0;
+
+                    selectedSymptoms.forEach(function(symptomId) {
+                        if (disease.scores[symptomId]) {
+                            currentScore += disease.scores[symptomId];
+                        }
+                    });
+
+                    if (currentScore > 0) {
+                        calculatedScores.push({
+                            name: disease.displayName,
+                            score: currentScore,
+                            advice: disease.advice,
+                            urgent: disease.urgent
+                        });
+                    }
+             }
+
+                calculatedScores.sort(function(a, b) {
+                    return b.score - a.score;
+                });
+
+                displayResults(calculatedScores);
+            }
+
+            // --- Result presentation ---
+            function displayResults(results) {
+                const resultsContainer = document.getElementById('results-container');
+                resultsContainer.innerHTML = '';
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = '<p id="no-result">ไม่พบโรคที่ตรงกับอาการของคุณ หรืออาการที่เลือกยังไม่ชัดเจนพอ</p>';
+                 return;
+             }
+
+                results.forEach(function(diseaseObj) { 
+        
+                    const resultCard = document.createElement('div');
+                    resultCard.className = 'result-card';
+        
+                    // เช็คว่ามีข้อมูล urgent หรือไม่
+                    let urgentHtml = '';
+                 if (diseaseObj.urgent) {
+                     urgentHtml = `
+                         <div class="danger-box">
+                                <span class="danger-icon">🚨</span>
+                                <div>
+                                    <strong>สัญญาณอันตรายที่ต้องรีบพบแพทย์:</strong><br>
+                                    ${diseaseObj.urgent}
+                             </div>
+                         </div>
+                     `;
+                    }
+
+                    resultCard.innerHTML = `
+                        <h3>${diseaseObj.name}</h3>
+                        <p>
+                           <strong>คะแนนความเป็นไปได้:</strong> 
+                           <span class="score">${diseaseObj.score} คะแนน</span>
+                     </p>
+                     <div class="result-advice">
+                         <strong>คำแนะนำเบื้องต้น:</strong> ${diseaseObj.advice}
+                     </div>
+                     ${urgentHtml} `;
+        
+                 resultsContainer.appendChild(resultCard);
+             });
+            }
+    
+            // -- Encyclopedia of disease in database--
+            function showEncyclopedia() {
+                // ซ่อนหน้าอื่น
+                document.getElementById('cover-page').style.display = 'none';
+                document.getElementById('checker-page').style.display = 'none';
+    
+                // แสดงหน้าคลังความรู้
+                document.getElementById('encyclopedia-page').style.display = 'block';
+
+                const container = document.getElementById('encyclopedia-container');
+    
+                // เช็คว่าเคยสร้างข้อมูลหรือยัง (ถ้ามีแล้วไม่ต้องสร้างซ้ำ เดี๋ยวจะเบิ้ล)
+                if (container.innerHTML.trim() !== "") return;
+
+                // วนลูปดึงข้อมูลจาก DISEASE_DB มาสร้างการ์ด
+                for (const key in DISEASE_DB) {
+                 const disease = DISEASE_DB[key];
+        
+                 // สร้าง HTML สำหรับส่วนสัญญาณอันตราย (ถ้ามี)
+                 let urgentHtml = '';
+                    if (disease.urgent) {
+                     urgentHtml = `
+                         <div class="danger-box" style="margin-top: 15px;">
+                              <span class="danger-icon">🚨</span>
+                              <div>
+                                  <strong>สัญญาณอันตราย:</strong><br>
+                                 ${disease.urgent}
+                             </div>
+                            </div>
+                     `;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'encyclopedia-item';
+                    card.innerHTML = `
+                        <h3>${disease.displayName}</h3>
+                     <p><strong>คำแนะนำ/การรักษา:</strong><br>${disease.advice}</p>
+                        ${urgentHtml}
+                    `;
+        
+                    container.appendChild(card);
+                }
+            }
+
+            // -- Go back to cover page function
+            function goBackToCover() {
+                document.getElementById('encyclopedia-page').style.display = 'none';
+                document.getElementById('checker-page').style.display = 'none';
+                document.getElementById('cover-page').style.display = 'block';
+            }
+    </script>
+
+</body>
+</html>
