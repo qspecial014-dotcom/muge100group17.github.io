@@ -418,7 +418,7 @@
 
         // --- Diseases and scores  ---
         const SYNDROME_DB = {
-            // 1. Respiratory system (ระบบทางเดินหายใจ)
+            // 1. Respiratory system (ระบบทางเดินหายใจ) Ref. คำแนะนำการรักษาผู้ป่วยไข้หวัดใหญ่สำหรับบุคลากรทางการแพทย์และสาธารณสุข ฉบับปรับปรุงวันที่ 2 ตุลาคม 2566 กระทรวงสาธารณสุข
             'respiratory': {
                 groupName: '1. ระบบทางเดินหายใจ (Respiratory System)',
                 redFlags: [
@@ -432,17 +432,17 @@
                     'common_cold': {
                         name: 'ไข้หวัด (Common Cold)',
                         score_criteria: { 's_runny_nose': 3, 's_sneeze': 2, 's_sore_throat': 2, 's_fever_low': 1 },
-                        specific_advice: 'พักผ่อน ดื่มน้ำอุ่น ทานยาแก้แพ้ลดน้ำมูก (CPM/Loratadine)'
+                        specific_advice: 'พักผ่อน ดื่มน้ำอุ่น หากมีไข้ให้ทานยา Paracetamol ทุก 4-6 ชั่วโมงเพื่อลดไข้ ทานยาแก้ไอ ทานยาแก้แพ้ลดน้ำมูก (CPM/Loratadine) หากไม่ต้องการให้ง่วงแนะนำให้ทาน Cetirizine ซึ่งเป็นยาแก้แพ้ที่ง่วงน้อยลงแทน และสวมหน้ากากอนามัยเพื่อป้องกันการแพร่เชื้อ'
                     },
                     'flu': {
                         name: 'ไข้หวัดใหญ่ (Influenza)',
                         score_criteria: { 's_fever_high': 3, 's_muscle_ache': 3, 's_headache': 2, 's_cough_dry': 2 },
-                        specific_advice: 'เช็ดตัวลดไข้ หากเป็นกลุ่มเสี่ยงควรพบแพทย์เพื่อพิจารณายา Oseltamivir'
+                        specific_advice: 'เช็ดตัวลดไข้ ทานยา Paracetamol ทุก 4-6 ชั่วโมงเพื่อลดไข้ ทานยาแก้ไอ หากเป็นกลุ่มเสี่ยงควรพบแพทย์เพื่อพิจารณายา Oseltamivir และสวมหน้ากากอนามัยเพื่อป้องกันการแพร่เชื้อ'
                     }
                 }
             },
 
-            // 2. Digestive system (ระบบทางเดินอาหาร)
+            // 2. Digestive system (ระบบทางเดินอาหาร) Ref. กรมควบคุมโรค เรื่องโรคอุจจาระร่วง , https://www.siphhospital.com/th/news/article/share/stomach-disease
             'digestive': {
                 groupName: '2. ระบบทางเดินอาหาร (Digestive System)',
                 redFlags: [
@@ -461,7 +461,7 @@
                     'gastritis': {
                         name: 'โรคกระเพาะอาหารอักเสบ',
                         score_criteria: { 's_stomach_pain': 3, 's_bloating': 2, 's_nausea': 1 },
-                        specific_advice: 'ทานยาลดกรด/เคลือบกระเพาะ ทานอาหารให้ตรงเวลา งดกาแฟ/แอลกอฮอล์'
+                        specific_advice: 'ทานยาลดกรด/เคลือบกระเพาะ ทานอาหารให้ตรงเวลา งดกาแฟ/แอลกอฮอล์ งดการใช้ยาแก้ปวดกลุ่ม NSAIDs'
                     }
                 }
             },
@@ -489,7 +489,7 @@
                 }
             },
 
-            // 4. Skin and subcutaneous (ระบบผิวหนัง)
+            // 4. Skin and subcutaneous (ระบบผิวหนัง) Ref. แนวทางการดูแลรักษาโรคผื่นภูมิแพ้ผิวหนัง คณะแพทยศาสตร์ศิริราชพยาบาล (2558)
             'skin': {
                 groupName: '4. ระบบผิวหนัง (Skin & Subcutaneous)',
                 redFlags: [
@@ -502,12 +502,12 @@
                     'urticaria': {
                         name: 'ลมพิษ / ภูมิแพ้ผิวหนัง (Urticaria)',
                         score_criteria: { 's_rash_itchy': 3, 's_skin_red': 2, 's_sneeze': 1 },
-                        specific_advice: 'ทานยาแก้แพ้ (Antihistamine) ประคบเย็นลดอาการคัน'
+                        specific_advice: 'ทานยาแก้แพ้ (CPM/Loratadine) หากไม่ต้องการให้ง่วงแนะนำให้ทาน Cetirizine ซึ่งเป็นยาแก้แพ้ที่ง่วงน้อยลงแทน ประคบเย็นลดอาการคัน และทาครีมทาผิวเพื่อเพิ่มความชุ่มชื้อบริเวณผิวหนัง'
                     }
                 }
             },
 
-            // 5. Headache (อาการปวดศีรษะ)
+            // 5. Headache (อาการปวดศีรษะ) Ref. ชมรมศึกษาโรคปวดศีรษะภายใต้สมาคมประสาทวิทยาแห่งประเทศไทยฉบับสมบูรณ์ (2565)
             'headache': {
                 groupName: '5. อาการปวดศีรษะ (Headache)',
                 redFlags: [
@@ -520,17 +520,17 @@
                     'migraine': {
                         name: 'ไมเกรน (Migraine)',
                         score_criteria: { 's_throbbing_pain': 3, 's_sensitive_light': 3, 's_headache': 2, 's_nausea': 1 },
-                        specific_advice: 'นอนพักในห้องมืดเงียบ ทานยาแก้ปวดทันที'
+                        specific_advice: 'นอนพักในห้องมืดเงียบ ทานยาแก้ปวดกลุ่ม NSAIDs หรือ Paracetamol เมื่อเริ่มมีอาการ หรือมีขณะมีอาการทันที'
                     },
                     'tension': {
                         name: 'ปวดศีรษะจากความเครียด (Tension)',
                         score_criteria: { 's_headache': 2, 's_neck_pain': 2, 's_muscle_ache': 1 },
-                        specific_advice: 'ผ่อนคลายความเครียด นวดผ่อนคลายกล้ามเนื้อคอบ่าไหล่'
+                        specific_advice: 'ผ่อนคลายความเครียด นวดผ่อนคลายกล้ามเนื้อคอบ่าไหล่ หากไม่หายปวดสามารถทาน Paracetamol ได้'
                     }
                 }
             },
 
-            // 6. Genitourinary (ระบบทางเดินปัสสาวะ)
+            // 6. Genitourinary (ระบบทางเดินปัสสาวะ) Ref.  แนวทางเวชปฏิบัติการรักษาโรคติดเชื้อทางเดินปัสสาวะ สมาคมโรคติดเชื้อแห่งประเทศไทย (2568), แนวทางการดูแลรักษาภาวะปวดประจำเดือน (Dysmenorrhea) (2558).
             'genitourinary': {
                 groupName: '6. ระบบทางเดินปัสสาวะและสูตินรีเวช (Genitourinary & Gynecology)',
                 redFlags: [
@@ -545,7 +545,7 @@
                     'cystitis': {
                         name: 'กระเพาะปัสสาวะอักเสบ (Cystitis)',
                         score_criteria: { 's_dysuria': 3, 's_freq_urination': 3, 's_stomach_pain': 1 }, // ปวดท้องน้อย
-                        specific_advice: 'ดื่มน้ำมากๆ เพื่อขับเชื้อแบคทีเรีย หากมีไข้ควรพบแพทย์เพื่อรับยาฆ่าเชื้อ'
+                        specific_advice: 'ดื่มน้ำมากๆ เพื่อขับเชื้อแบคทีเรีย หากมีไข้หรืออาการไม่ดีขึ้นควรพบแพทย์เพื่อรับยาฆ่าเชื้อ'
                     },
                     'dysmenorrhea': {
                         name: 'ปวดประจำเดือน (Dysmenorrhea)',
@@ -556,31 +556,31 @@
             }
         };
         
-        // --- 3. ส่วนการทำงานของ JavaScript  ---
+            // --- 3. ส่วนการทำงานของ JavaScript  ---
 
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // 3.1 สร้าง Checkbox อัตโนมัติ
-            const symptomListContainer = document.getElementById('symptom-list');
-            for (const symptomId in ALL_SYMPTOMS) {
-                const labelText = ALL_SYMPTOMS[symptomId];
+            document.addEventListener('DOMContentLoaded', function() {
                 
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'symptom-item';
-                
-                itemDiv.innerHTML = `
-                    <label>
-                        <input type="checkbox" name="symptoms" value="${symptomId}">
-                        ${labelText}
-                    </label>
-                `;
-                symptomListContainer.appendChild(itemDiv);
-            }
+                // 3.1 สร้าง Checkbox อัตโนมัติ
+                const symptomListContainer = document.getElementById('symptom-list');
+                for (const symptomId in ALL_SYMPTOMS) {
+                    const labelText = ALL_SYMPTOMS[symptomId];
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'symptom-item';
+                    
+                    itemDiv.innerHTML = `
+                        <label>
+                            <input type="checkbox" name="symptoms" value="${symptomId}">
+                            ${labelText}
+                        </label>
+                    `;
+                    symptomListContainer.appendChild(itemDiv);
+                }
 
-            // 3.2 สั่งให้ปุ่ม "วิเคราะห์" รอคลิก
-            const analyzeButton = document.getElementById('analyze-button');
-            analyzeButton.addEventListener('click', analyzeSymptoms);
-        });
+                // 3.2 สั่งให้ปุ่ม "วิเคราะห์" รอคลิก
+                const analyzeButton = document.getElementById('analyze-button');
+                analyzeButton.addEventListener('click', analyzeSymptoms);
+            });
 
             // --- Symptoms analysis ---
             function analyzeSymptoms() {
